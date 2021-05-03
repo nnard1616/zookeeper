@@ -140,11 +140,11 @@ public class QuorumFlexible implements QuorumVerifier {
      */
     private void setQuorumValues(int votingMembers) {
         /**
-         * Default to simple majority when no failLimit is uninitialized
+         * Default to simple majority when failLimit is invalid
          * <UIUC CS 525 Group: Milan Mishra, Nathan Nard, Arif Topcu>
          */
-        if (failLimit == null) {
-            LOG.info("setQuorumValues: failLimit is null {}", "");
+        if (failLimit == null || failLimit >= votingMembers) {
+            LOG.info("setQuorumValues: failLimit is invalid {}", "");
             electionQuorum = (votingMembers / 2) + 1;
             atomicBroadcastQuorum = (votingMembers / 2) + 1;
         } else {
