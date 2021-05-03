@@ -184,7 +184,7 @@ public class QuorumPeerMain {
             quorumPeer.setMaxSessionTimeout(config.getMaxSessionTimeout());
             quorumPeer.setInitLimit(config.getInitLimit());
             quorumPeer.setSyncLimit(config.getSyncLimit());
-            quorumPeer.setFailLimit(config.getFailLimit());
+            quorumPeer.setFailLimit(config.getFailLimit()); /* <UIUC CS 525 Group: Milan Mishra, Nathan Nard, Arif Topcu> */
             quorumPeer.setConnectToLearnerMasterLimit(config.getConnectToLearnerMasterLimit());
             quorumPeer.setObserverMasterPort(config.getObserverMasterPort());
             quorumPeer.setConfigFileName(config.getConfigFilename());

@@ -41,9 +41,6 @@ import org.slf4j.LoggerFactory;
  */
 public class QuorumFlexible implements QuorumVerifier {
 
-    private static final Logger LOG = LoggerFactory.getLogger(QuorumFlexible.class);
-
-
     private Map<Long, QuorumServer> allMembers = new HashMap<Long, QuorumServer>();
     private HashMap<Long, QuorumServer> votingMembers = new HashMap<Long, QuorumServer>();
     private HashMap<Long, QuorumServer> observingMembers = new HashMap<Long, QuorumServer>();
@@ -51,9 +48,11 @@ public class QuorumFlexible implements QuorumVerifier {
     private int half;
     private String quorumSystem = "Flexible";
 
-    private static volatile Integer failLimit = null;
-    private volatile Integer electionQuorum = null;
-    private volatile Integer atomicBroadcastQuorum = null;
+    /* <UIUC CS 525 Group: Milan Mishra, Nathan Nard, Arif Topcu> */
+    private static final Logger LOG = LoggerFactory.getLogger(QuorumFlexible.class);
+    private static volatile Integer failLimit;
+    private volatile Integer electionQuorum;
+    private volatile Integer atomicBroadcastQuorum;
 
 
 
@@ -84,7 +83,7 @@ public class QuorumFlexible implements QuorumVerifier {
      * <Max Meldrum> + sets values for Q1 and Q2
      */
     public QuorumFlexible(Map<Long, QuorumServer> allMembers) {
-        LOG.info("QuorumFlexible created here: {}", 1);
+        LOG.info("QuorumFlexible created here: {}", 1); /* <UIUC CS 525 Group: Milan Mishra, Nathan Nard, Arif Topcu> */
         this.allMembers = allMembers;
         for (QuorumServer qs : allMembers.values()) {
             if (qs.type == LearnerType.PARTICIPANT) {
@@ -98,7 +97,7 @@ public class QuorumFlexible implements QuorumVerifier {
     }
 
     public QuorumFlexible(Properties props) throws ConfigException {
-        LOG.info("QuorumFlexible created here: {}", 2);
+        LOG.info("QuorumFlexible created here: {}", 2); /* <UIUC CS 525 Group: Milan Mishra, Nathan Nard, Arif Topcu> */
         for (Entry<Object, Object> entry : props.entrySet()) {
             String key = entry.getKey().toString();
             String value = entry.getValue().toString();
@@ -119,13 +118,17 @@ public class QuorumFlexible implements QuorumVerifier {
                 electionQuorum = Integer.parseInt(value);
             } else if (key.startsWith("atomicBroadcastQuorum")) {
                 atomicBroadcastQuorum = Integer.parseInt(value);
-            } else if (key.startsWith("failLimit")) {
+            } else if (key.startsWith("failLimit")) { /* <UIUC CS 525 Group: Milan Mishra, Nathan Nard, Arif Topcu> */
                 failLimit = Integer.parseInt(value);
             }
         }
         half = votingMembers.size() / 2;
 
-        if (null == electionQuorum || null == atomicBroadcastQuorum) {
+        /**
+         * Fallback if quorums are still not defined
+         * <UIUC CS 525 Group: Milan Mishra, Nathan Nard, Arif Topcu>
+         */
+        if (electionQuorum == null  || atomicBroadcastQuorum == null) {
             setQuorumValues(votingMembers.size());
         }
     }
@@ -136,16 +139,22 @@ public class QuorumFlexible implements QuorumVerifier {
      * <Max Meldrum>
      */
     private void setQuorumValues(int votingMembers) {
-        if (null == failLimit) {
+        /**
+         * Default to simple majority when no failLimit is uninitialized
+         * <UIUC CS 525 Group: Milan Mishra, Nathan Nard, Arif Topcu>
+         */
+        if (failLimit == null) {
             LOG.info("setQuorumValues: failLimit is null {}", "");
-            // default to simple majority when no failLimit is specified
-            electionQuorum = votingMembers / 2 + 1;
-            atomicBroadcastQuorum = votingMembers / 2 + 1;
+            electionQuorum = (votingMembers / 2) + 1;
+            atomicBroadcastQuorum = (votingMembers / 2) + 1;
         } else {
             LOG.info("setQuorumValues: failLimit is {}", failLimit);
             electionQuorum = votingMembers - failLimit;
             atomicBroadcastQuorum = failLimit + 1;
         }
+        /**
+         * <UIUC CS 525 Group: Milan Mishra, Nathan Nard, Arif Topcu>
+         */
         LOG.info("setQuorumValues: electionQuorum is {}", electionQuorum);
         LOG.info("setQuorumValues: atomicBroadcastQuorum is {}", atomicBroadcastQuorum);
     }
@@ -193,7 +202,7 @@ public class QuorumFlexible implements QuorumVerifier {
      * <Max Meldrum>
      */
     public boolean containsElectionQuorum(Set<Long> ackSet) {
-        LOG.info("ELECTIONQUORUM: {}", electionQuorum);
+        LOG.info("ELECTIONQUORUM: {}", electionQuorum); /* <UIUC CS 525 Group: Milan Mishra, Nathan Nard, Arif Topcu> */
         return (ackSet.size() >= electionQuorum);
     }
 
@@ -202,7 +211,7 @@ public class QuorumFlexible implements QuorumVerifier {
      * <Max Meldrum>
      */
     public boolean containsAtomicBroadcastQuorum(Set<Long> ackSet) {
-        LOG.info("ATOMICBROADCASTQUORUM: {}", atomicBroadcastQuorum);
+        LOG.info("ATOMICBROADCASTQUORUM: {}", atomicBroadcastQuorum); /* <UIUC CS 525 Group: Milan Mishra, Nathan Nard, Arif Topcu> */
         return (ackSet.size() >= atomicBroadcastQuorum);
     }
 
