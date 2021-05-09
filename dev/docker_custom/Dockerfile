@@ -53,5 +53,6 @@ ENV PATH=$PATH:/$DISTRO_NAME/bin \
 
 COPY ./dev/docker_custom/docker-entrypoint.sh /
 RUN ["chmod", "+x", "/docker-entrypoint.sh"]
+RUN ["chmod", "+x", "./bin/zkServer.sh"]
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["./bin/zkServer.sh", "start-foreground"]
